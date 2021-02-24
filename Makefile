@@ -30,8 +30,8 @@ TAREXT = txz
 
 default: randall
 
-randall: randall.c options.o output.o rand64-hw.o rand64-sw.o
-	$(CC) $(CFLAGS) $@.c options.o output.o rand64-hw.o rand64-sw.o -o $@
+randall: randall.c options.o output.o rand64-hw.o rand64-sw.o rand64-mrand.o
+	$(CC) $(CFLAGS) $@.c options.o output.o rand64-hw.o rand64-sw.o rand64-mrand.o -o $@
 	
 options: options.c options.h
 	$(CC) $(CFLAGS) $@.c $@.h -o $@
@@ -43,6 +43,9 @@ rand64-hw: rand64-hw.c rand64-hw.h
 	$(CC) $(CFLAGS) $@.c $@.h -o $@
 	
 rand64-sw: rand64-sw.c rand64-sw.h
+	$(CC) $(CFLAGS) $@.c $@.h -o $@
+	
+rand64-mrand: rand64-mrand.c rand64-mrand.h
 	$(CC) $(CFLAGS) $@.c $@.h -o $@
 	
 check: randall script.sh

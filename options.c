@@ -4,6 +4,7 @@ void setOptions(int argc, char** argv, struct flags *set)
 {
     int option = 0;
     char *input = NULL;
+    char *output = NULL;
 
     while ((option = getopt(argc, argv, "i:o:")) != -1)
     {
@@ -15,7 +16,6 @@ void setOptions(int argc, char** argv, struct flags *set)
 
                 if (0 == strcmp(input, "rdrand"))
                 {
-                    set->rdrand = true;
                     break;
                 }
 
@@ -35,10 +35,25 @@ void setOptions(int argc, char** argv, struct flags *set)
 
             case 'o':
             {
-                if (optarg == "stdio")
+                output = optarg;
+                if (0 == strcmp(output, "stdio"))
                 {
-                    // output to stdio
+                    break;
                 }
+
+                for (int i = 0; i < strlen(output) - 1; i++)
+                {
+                    if (!isdigit(output[i]))
+                    {
+                        printf("Argument is not a number. \n");
+                        break;
+                    }
+                }
+
+                int val = atoi(output);
+                set->n = val;
+                set->n_output = true;
+                break;
             }
 
             default:

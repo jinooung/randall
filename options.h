@@ -2,19 +2,17 @@
 #define OPTIONS_H_
 
 #include <stdio.h>
-#include <stdbool.h>
-#include <errno.h>
-
+#include <stdbool.h> 
+#include <string.h>
 #include <unistd.h>
+#include <errno.h>
 #include <stdlib.h>
 
 struct flags
 {
-    bool rdrand;
     bool mrand;
     bool file;
     char* filename;
-    bool stdio;
     bool n_output;
     int n;
 };

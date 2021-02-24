@@ -3,9 +3,9 @@
 /* Hardware implementation.  */
 
 /* Return information about the CPU.  See <http://wiki.osdev.org/CPUID>.  */
-struct cpuid cpuid(unsigned int leaf, unsigned int subleaf)
+static struct cpuid cpuid(unsigned int leaf, unsigned int subleaf)
 {
-    struct cpuid result;
+    static struct cpuid result;
     asm("cpuid"
         : "=a" (result.eax), "=b" (result.ebx),
         "=c" (result.ecx), "=d" (result.edx)

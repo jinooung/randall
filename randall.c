@@ -33,12 +33,10 @@
 int main(int argc, char** argv)
 {
     struct flags set;
-    set.rdrand = true;
     set.mrand = false;
     set.file = false;
     set.filename = "/dev/random";
 
-    set.stdio = false;
     set.n = -1;
     set.n_output = false;
 
@@ -68,7 +66,7 @@ int main(int argc, char** argv)
         rand64 = software_rand64;
         finalize = software_rand64_fini;
     }
-    else if (set.rdrand)
+    else
     {
         if (rdrand_supported())
         {
@@ -92,12 +90,29 @@ int main(int argc, char** argv)
     int wordsize = sizeof rand64();
     int output_errno = 0;
 
-    do
+    if (set.n_output)
     {
-        unsigned long long x = rand64();
-        printBytes(&nbytes, wordsize, output_errno, x);
+        int total = 0;
+        int buffer = set.n; 
+        int index = 0;
 
-    } while (0 < nbytes);
+        char* arr = malloc(sizeof(char) * (buffer));
+
+        while (total < nbytes)
+        {
+            unsigned long long x = rand64();
+            print_n(arr, &total, buffer, index, x, nbytes);
+        }
+    }
+    else
+    {
+        do
+        {
+            unsigned long long x = rand64();
+            printBytes(&nbytes, wordsize, output_errno, x);
+        } 
+        while (0 < nbytes);
+    }
 
     if (fclose(stdout) != 0)
         output_errno = errno;

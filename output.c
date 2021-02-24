@@ -1,6 +1,6 @@
 #include "output.h"
 
-bool writebytes(unsigned long long x, int nbytes)
+static bool writebytes(unsigned long long x, int nbytes)
 {
     do
     {
@@ -8,11 +8,11 @@ bool writebytes(unsigned long long x, int nbytes)
             return false;
         x >>= CHAR_BIT;
         nbytes--;
-    } while (0 < nbytes);
+    } 
+    while (0 < nbytes);
 
     return true;
 }
-
 
 void printBytes(long long *nbytes, int wordsize, int output_errno, unsigned long long x)
 {
@@ -25,5 +25,30 @@ void printBytes(long long *nbytes, int wordsize, int output_errno, unsigned long
             break;
         }
         *nbytes -= outbytes;
+    }
+}
+
+void print_n(char* arr, int* total, int buffer, int index, unsigned long long x, int nbytes) 
+{
+    if (*total + buffer > nbytes)
+    {
+        buffer = nbytes - *total;
+    }
+
+    while (x > 0 && index < buffer)
+    {
+        arr[index] = x;
+        x >>= 1;
+
+        if (*total + index < nbytes)
+        {
+            index++;
+        }
+    }
+
+    if (index == buffer)
+    {
+        write(1, arr, buffer);
+        *total += index;
     }
 }

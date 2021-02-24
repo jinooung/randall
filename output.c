@@ -16,7 +16,7 @@ bool writebytes(unsigned long long x, int nbytes)
 
 void printBytes(long long *nbytes, int wordsize, int output_errno, unsigned long long x)
 {
-    do 
+    while (0 < *nbytes)
     {
         int outbytes = *nbytes < wordsize ? *nbytes : wordsize;
         if (!writebytes(x, outbytes))
@@ -25,5 +25,5 @@ void printBytes(long long *nbytes, int wordsize, int output_errno, unsigned long
             break;
         }
         *nbytes -= outbytes;
-    } while (0 < *nbytes);
+    }
 }

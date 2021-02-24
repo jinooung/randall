@@ -26,10 +26,24 @@
 #include "output.h"
 #include "rand64-hw.h"
 #include "rand64-sw.h"
+#include "rand64-mrand.h"
+
 
 /* Main program, which outputs N bytes of random data.  */
 int main(int argc, char** argv)
 {
+    struct flags set;
+    set.rdrand = true;
+    set.mrand = false;
+    set.file = false;
+    set.filename = "/dev/random";
+
+    set.stdio = false;
+    set.n = -1;
+    set.n_output = false;
+
+    setOptions(argc, argv, &set);
+
     long long nbytes = 0;
 
     if (!getArguments(argc, argv, &nbytes))
@@ -37,22 +51,41 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    /* Now that we know we have work to do, arrange to use the
-       appropriate library.  */
     void (*initialize) (void);
     unsigned long long (*rand64) (void);
     void (*finalize) (void);
-    if (rdrand_supported())
+
+    if (set.mrand)
     {
-        initialize = hardware_rand64_init;
-        rand64 = hardware_rand64;
-        finalize = hardware_rand64_fini;
+        initialize = mrand_rand64_init;
+        rand64 = mrand_rand64;
+        finalize = mrand_rand64_fini;
     }
-    else
+    else if (set.filename && set.file == true)
     {
-        initialize = software_rand64_init; 
+        getFile(set.filename);
+        initialize = software_rand64_init;
         rand64 = software_rand64;
         finalize = software_rand64_fini;
+    }
+    else if (set.rdrand)
+    {
+        if (rdrand_supported())
+        {
+            initialize = hardware_rand64_init;
+            rand64 = hardware_rand64;
+            finalize = hardware_rand64_fini;
+        }
+        else if (!rdrand_supported() && nbytes == NULL)
+        {
+            return 0;
+        }
+        else
+        {
+            printf("This CPU is not supported by RDRAND \n");
+            printf("To use software support, please use -i /path/file \n");
+            return 0;
+        }
     }
 
     initialize();

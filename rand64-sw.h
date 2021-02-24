@@ -6,7 +6,10 @@
 
 /* Input stream containing random bytes.  */
 static FILE* urandstream;
-void software_rand64_init(void);
+static char* input;
+
+void getFile(char* file);
+void software_rand64_init();
 unsigned long long software_rand64(void);
 void software_rand64_fini(void);
 

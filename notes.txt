@@ -1,0 +1,39 @@
+Firstly I extracted the zip file.
+Secondly, I opened the C file and the makefile 
+	to preview the contents.
+After some observation, I started to split the modules.
+
+Began with the options.
+		First hurdle was to somehow pass nbytes by reference.
+		
+Secondly, I tested to see that program still works after
+	Splitting the options module with options.c and options.h
+	
+I updated the makefile to then include the options files
+	gcc to create options object to then link with randall.
+
+Then I worked on splitting the output.
+	I first began by splitting the writebytes and started testing.
+	
+I updated the makefile accordingly as well.
+
+After splitting the output, I continued and moved the software
+	and hardware implementations into their respective C and header
+	files.
+	
+Updated the makefile, and tested after every new C and header file	
+	was created and added to the makefile.
+	
+After the program started working and all the modules were split
+	into C and header files, I moved the do-while loop that printed
+	the bytes onto the output file.
+	
+1. errno gave me some issues so I had to add the errno library 
+		into the output header file.
+2. I kept the declaration of variable x = rand64() as a main variable
+		and passed the variable as value to the function.
+3. Attempting to find a way to pass errno value to another function,
+		but it is very difficult.
+		
+*** Did not read we must upload to Git until now ***
+			Uploaded and Updated from now
